@@ -3,20 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>چت ناشناس سبک</title>
+    <title>چت ناشناس امن</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Vazir', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        @font-face {
+            font-family: 'Vazir';
+            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir.woff2') format('woff2');
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
             padding: 20px;
-            color: #333;
+            color: #e6e6e6;
         }
         
         .container {
@@ -24,87 +29,117 @@
             margin: 0 auto;
         }
         
-        /* پنل ادمین مخفی */
-        #adminPanel {
+        /* پنل ادمین مخفی با دسترسی امن */
+        .admin-access {
             position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.1);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(10px);
-            border-radius: 10px;
-            padding: 15px;
-            width: 300px;
+            border-radius: 15px;
+            padding: 40px;
+            width: 400px;
             display: none;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 9999;
+            box-shadow: 0 0 50px rgba(0, 150, 255, 0.3);
+            border: 2px solid #0099ff;
         }
         
-        #adminPanel.show {
+        .admin-access.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+        
+        .admin-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9998;
+            display: none;
+        }
+        
+        .admin-overlay.show {
             display: block;
         }
         
-        .admin-toggle {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: #ff4757;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            z-index: 999;
-            font-size: 14px;
-        }
-        
         .card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background: rgba(25, 25, 35, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
             margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
         }
         
         h1 {
             text-align: center;
-            color: #2d3436;
-            margin-bottom: 10px;
-            font-size: 2.5rem;
+            color: #ffffff;
+            margin-bottom: 15px;
+            font-size: 2.8rem;
+            background: linear-gradient(90deg, #0099ff, #00ffcc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0, 153, 255, 0.3);
         }
         
         .subtitle {
             text-align: center;
-            color: #636e72;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
+            color: #a0a0a0;
+            margin-bottom: 40px;
+            font-size: 1.2rem;
+            line-height: 1.6;
         }
         
         .tabs {
             display: flex;
             justify-content: center;
-            margin-bottom: 30px;
-            background: #f1f2f6;
-            border-radius: 10px;
+            margin-bottom: 40px;
+            background: rgba(40, 40, 60, 0.7);
+            border-radius: 12px;
             overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .tab {
             flex: 1;
-            padding: 15px;
+            padding: 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
             font-weight: 600;
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
         }
         
         .tab.active {
-            background: #6c5ce7;
+            background: linear-gradient(90deg, #0099ff, #00ccff);
             color: white;
+            box-shadow: 0 0 15px rgba(0, 153, 255, 0.5);
+        }
+        
+        .tab:not(.active):hover {
+            background: rgba(255, 255, 255, 0.05);
         }
         
         .form-container {
             display: none;
+            animation: slideUp 0.4s ease;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .form-container.active {
@@ -112,63 +147,69 @@
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 600;
-            color: #2d3436;
+            color: #ffffff;
+            font-size: 1.1rem;
         }
         
         input, select, textarea {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #dfe6e9;
-            border-radius: 8px;
+            padding: 15px 20px;
+            background: rgba(30, 30, 40, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
             font-size: 16px;
-            transition: border 0.3s;
+            transition: all 0.3s;
+            color: white;
         }
         
         input:focus, select:focus, textarea:focus {
-            border-color: #6c5ce7;
+            border-color: #0099ff;
             outline: none;
+            box-shadow: 0 0 15px rgba(0, 153, 255, 0.3);
         }
         
         .btn {
-            background: #6c5ce7;
+            background: linear-gradient(90deg, #0099ff, #00ccff);
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
+            padding: 16px 30px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 600;
             transition: all 0.3s;
             display: block;
             width: 100%;
+            position: relative;
+            overflow: hidden;
         }
         
         .btn:hover {
-            background: #5b4bd8;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 153, 255, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
         }
         
         .btn-secondary {
-            background: #636e72;
-        }
-        
-        .btn-secondary:hover {
-            background: #57606f;
+            background: linear-gradient(90deg, #666, #888);
         }
         
         .btn-danger {
-            background: #ff4757;
+            background: linear-gradient(90deg, #ff416c, #ff4b2b);
         }
         
-        .btn-danger:hover {
-            background: #ff3742;
+        .btn-success {
+            background: linear-gradient(90deg, #00b09b, #96c93d);
         }
         
         .chat-container {
@@ -179,245 +220,483 @@
         }
         
         .chat-header {
-            background: #6c5ce7;
+            background: linear-gradient(90deg, #0099ff, #00ccff);
             color: white;
-            padding: 15px;
-            border-radius: 10px 10px 0 0;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 153, 255, 0.3);
         }
         
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 20px;
-            background: #f8f9fa;
-            border-left: 1px solid #ddd;
-            border-right: 1px solid #ddd;
+            padding: 25px;
+            background: rgba(20, 20, 30, 0.9);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        /* اسکرول بار زیبا */
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #0099ff, #00ccff);
+            border-radius: 10px;
         }
         
         .message {
-            margin-bottom: 15px;
-            padding: 12px 15px;
-            border-radius: 15px;
-            max-width: 70%;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            border-radius: 18px;
+            max-width: 75%;
             word-wrap: break-word;
+            position: relative;
+            animation: messageAppear 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        @keyframes messageAppear {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .message.sent {
-            background: #6c5ce7;
+            background: linear-gradient(135deg, #0099ff, #00ccff);
             color: white;
             margin-left: auto;
             border-bottom-right-radius: 5px;
         }
         
         .message.received {
-            background: #dfe6e9;
-            color: #2d3436;
+            background: linear-gradient(135deg, #2a2a3a, #3a3a4a);
+            color: #ffffff;
             margin-right: auto;
             border-bottom-left-radius: 5px;
         }
         
         .message-info {
             font-size: 12px;
-            opacity: 0.7;
-            margin-top: 5px;
+            opacity: 0.8;
+            margin-top: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .message-sender {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .message-sender .badge {
+            background: #ff416c;
+            color: white;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-right: 8px;
         }
         
         .chat-input {
             display: flex;
-            padding: 15px;
-            background: white;
-            border-radius: 0 0 10px 10px;
-            border-top: 1px solid #ddd;
+            padding: 20px;
+            background: rgba(25, 25, 35, 0.9);
+            border-radius: 0 0 15px 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            gap: 15px;
         }
         
         .chat-input textarea {
             flex: 1;
-            border: 2px solid #dfe6e9;
-            border-radius: 8px;
+            background: rgba(30, 30, 40, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
             resize: none;
-            height: 60px;
+            height: 70px;
             font-size: 16px;
+            padding: 15px;
+            transition: all 0.3s;
+        }
+        
+        .chat-input textarea:focus {
+            border-color: #0099ff;
+            box-shadow: 0 0 20px rgba(0, 153, 255, 0.2);
         }
         
         .send-btn {
-            margin-right: 10px;
-            background: #6c5ce7;
+            background: linear-gradient(135deg, #0099ff, #00ccff);
             color: white;
             border: none;
-            border-radius: 8px;
-            padding: 0 25px;
+            border-radius: 12px;
+            padding: 0 30px;
             cursor: pointer;
             font-weight: 600;
+            font-size: 18px;
+            transition: all 0.3s;
+            min-width: 100px;
+        }
+        
+        .send-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 153, 255, 0.4);
         }
         
         .user-info {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(40, 40, 60, 0.7);
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .avatar {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background: #6c5ce7;
+            background: linear-gradient(135deg, #0099ff, #00ccff);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 22px;
+            box-shadow: 0 5px 15px rgba(0, 153, 255, 0.4);
         }
         
         .logout-btn {
-            background: #ff4757;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
+            padding: 12px 25px;
+            border-radius: 10px;
             cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 65, 108, 0.4);
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #00b09b, #96c93d);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            display: none;
+            max-width: 500px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .notification.show {
+            display: block;
+            animation: slideInUp 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+        }
+        
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        .online-users-panel {
+            background: rgba(40, 40, 60, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .online-users-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #00ccff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .online-users-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .online-user {
+            display: flex;
+            align-items: center;
+            background: rgba(30, 30, 40, 0.8);
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 1px solid rgba(0, 153, 255, 0.3);
+        }
+        
+        .online-user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00b09b, #96c93d);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00ff00;
+            margin-left: 10px;
+            box-shadow: 0 0 10px #00ff00;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .admin-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 5px 20px rgba(255, 65, 108, 0.4);
+            transition: all 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .admin-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 65, 108, 0.6);
+        }
+        
+        .admin-panel {
+            background: rgba(0, 0, 0, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+            border: 2px solid #ff416c;
+            display: none;
+        }
+        
+        .admin-panel.show {
+            display: block;
+            animation: slideDown 0.5s ease;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .admin-section {
-            margin-top: 30px;
-            border-top: 1px solid #ddd;
-            padding-top: 20px;
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .admin-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            margin-top: 20px;
         }
         
         .admin-table th, .admin-table td {
-            padding: 12px;
+            padding: 15px;
             text-align: right;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .admin-table th {
-            background: #f1f2f6;
+            background: rgba(255, 65, 108, 0.2);
             font-weight: 600;
+            color: #ffccd5;
         }
         
         .admin-table tr:hover {
-            background: #f8f9fa;
+            background: rgba(255, 255, 255, 0.05);
         }
         
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #00b894;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            z-index: 1001;
-            display: none;
+        .admin-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
         }
         
-        .notification.show {
-            display: block;
-            animation: fadeInOut 3s ease-in-out;
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(40, 40, 60, 0.8);
+            border-radius: 20px;
+            margin-bottom: 15px;
+            width: fit-content;
+            animation: fadeIn 0.3s ease;
         }
         
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0; }
-            10%, 90% { opacity: 1; }
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            margin-right: 10px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ccff;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.6; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        
+        .message-time {
+            font-size: 11px;
+            opacity: 0.7;
         }
         
         @media (max-width: 768px) {
+            .card {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .chat-container {
+                height: 65vh;
+            }
+            
+            .online-users-list {
+                justify-content: center;
+            }
+            
+            .admin-access {
+                width: 90%;
+                padding: 30px;
+            }
+            
+            .admin-table th, .admin-table td {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
             .card {
                 padding: 20px;
             }
             
             h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
             
-            .chat-container {
-                height: 60vh;
+            .user-info {
+                flex-direction: column;
+                gap: 15px;
             }
             
-            #adminPanel {
-                width: 90%;
-                left: 5%;
+            .chat-input {
+                flex-direction: column;
+            }
+            
+            .send-btn {
+                width: 100%;
+                height: 50px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- دکمه نمایش پنل ادمین -->
-    <button class="admin-toggle" id="adminToggle">پنل مدیریت</button>
-    
-    <!-- پنل ادمین مخفی -->
-    <div id="adminPanel">
-        <h3>پنل مدیریت ادمین</h3>
-        <p>از اینجا می‌توانید کاربران و پیام‌ها را مدیریت کنید.</p>
-        
-        <div class="admin-section">
-            <h4>مدیریت کاربران</h4>
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>نام کاربری</th>
-                        <th>شناسه ناشناس</th>
-                        <th>تاریخ ثبت‌نام</th>
-                        <th>عملیات</th>
-                    </tr>
-                </thead>
-                <tbody id="adminUsersList">
-                    <!-- کاربران اینجا لود می‌شوند -->
-                </tbody>
-            </table>
-            <button class="btn btn-danger" id="clearAllUsers" style="margin-top: 10px;">حذف تمام کاربران</button>
+    <!-- بخش دسترسی ادمین (مخفی) -->
+    <div class="admin-overlay" id="adminOverlay"></div>
+    <div class="admin-access" id="adminAccess">
+        <h2 style="text-align: center; margin-bottom: 30px; color: #ff416c;">🔐 دسترسی مدیریت</h2>
+        <div class="form-group">
+            <label for="adminUsername">نام کاربری ادمین</label>
+            <input type="text" id="adminUsername" placeholder="نام کاربری ادمین">
         </div>
-        
-        <div class="admin-section">
-            <h4>مدیریت پیام‌ها</h4>
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>فرستنده</th>
-                        <th>پیام</th>
-                        <th>زمان</th>
-                        <th>عملیات</th>
-                    </tr>
-                </thead>
-                <tbody id="adminMessagesList">
-                    <!-- پیام‌ها اینجا لود می‌شوند -->
-                </tbody>
-            </table>
-            <button class="btn btn-danger" id="clearAllMessages" style="margin-top: 10px;">حذف تمام پیام‌ها</button>
+        <div class="form-group">
+            <label for="adminPassword">رمز عبور ادمین</label>
+            <input type="password" id="adminPassword" placeholder="رمز عبور ادمین">
         </div>
-        
-        <div class="admin-section">
-            <h4>داده‌های سیستم</h4>
-            <button class="btn btn-secondary" id="exportData">خروجی داده‌ها</button>
-            <button class="btn btn-secondary" id="importData">ورودی داده‌ها</button>
-            <button class="btn btn-danger" id="resetAll">بازنشانی کامل سیستم</button>
+        <div class="form-group">
+            <label for="adminSecret">کد مخفی</label>
+            <input type="password" id="adminSecret" placeholder="کد مخفی سیستم">
         </div>
+        <button class="btn btn-danger" id="adminLoginBtn">ورود به پنل مدیریت</button>
+        <button class="btn btn-secondary" id="closeAdminBtn" style="margin-top: 15px;">انصراف</button>
     </div>
+    
+    <!-- نشانگر ادمین (فقط برای ادمین واقعی) -->
+    <div class="admin-badge" id="adminBadge" style="display: none;">🔧 مدیریت سیستم</div>
     
     <div class="container">
         <div class="card">
-            <h1>💬 چت ناشناس سبک</h1>
-            <p class="subtitle">با دیگران به صورت ناشناس گفتگو کنید. همه چیز در مرورگر شما ذخیره می‌شود.</p>
+            <h1>🔒 چت ناشناس امن</h1>
+            <p class="subtitle">گفتگوی کاملاً ناشناس و امن • تمام داده‌ها در مرورگر شما ذخیره می‌شود • بدون نیاز به سرور خارجی</p>
+            
+            <!-- پنل کاربران آنلاین -->
+            <div class="online-users-panel" id="onlineUsersPanel" style="display: none;">
+                <div class="online-users-title">
+                    <span>👥 کاربران آنلاین</span>
+                    <span class="status-indicator"></span>
+                </div>
+                <div class="online-users-list" id="onlineUsersList">
+                    <!-- کاربران آنلاین اینجا نمایش داده می‌شوند -->
+                </div>
+            </div>
             
             <!-- تب‌های ورود و ثبت‌نام -->
             <div class="tabs">
                 <div class="tab active" data-tab="login">ورود به حساب</div>
-                <div class="tab" data-tab="register">ثبت‌نام جدید</div>
+                <div class="tab" data-tab="register">ایجاد حساب جدید</div>
             </div>
             
             <!-- فرم ورود -->
@@ -430,6 +709,10 @@
                     <label for="loginPassword">رمز عبور</label>
                     <input type="password" id="loginPassword" placeholder="رمز عبور خود را وارد کنید">
                 </div>
+                <div class="form-group" style="text-align: center; margin-top: 30px;">
+                    <div style="color: #a0a0a0; margin-bottom: 10px;">دسترسی مدیریت سیستم</div>
+                    <button class="btn btn-secondary" id="openAdminBtn" style="width: auto; padding: 12px 30px; display: inline-block;">ورود به بخش مدیریت</button>
+                </div>
                 <button class="btn" id="loginBtn">ورود به چت</button>
             </div>
             
@@ -437,43 +720,72 @@
             <div id="registerForm" class="form-container">
                 <div class="form-group">
                     <label for="registerUsername">نام کاربری</label>
-                    <input type="text" id="registerUsername" placeholder="یک نام کاربری انتخاب کنید">
+                    <input type="text" id="registerUsername" placeholder="یک نام کاربری منحصر به فرد انتخاب کنید">
+                    <div style="font-size: 12px; color: #888; margin-top: 5px;">نام کاربری شما هرگز در چت نمایش داده نمی‌شود</div>
                 </div>
                 <div class="form-group">
                     <label for="registerPassword">رمز عبور</label>
-                    <input type="password" id="registerPassword" placeholder="یک رمز عبور انتخاب کنید">
+                    <input type="password" id="registerPassword" placeholder="رمز عبور قوی انتخاب کنید">
                 </div>
                 <div class="form-group">
                     <label for="confirmPassword">تکرار رمز عبور</label>
                     <input type="password" id="confirmPassword" placeholder="رمز عبور را تکرار کنید">
                 </div>
-                <button class="btn" id="registerBtn">ثبت‌نام و ورود</button>
+                <div class="form-group">
+                    <label for="userGender">جنسیت (اختیاری)</label>
+                    <select id="userGender">
+                        <option value="">انتخاب نکنید</option>
+                        <option value="male">مرد</option>
+                        <option value="female">زن</option>
+                        <option value="other">سایر</option>
+                    </select>
+                </div>
+                <button class="btn" id="registerBtn">ایجاد حساب و ورود</button>
             </div>
             
             <!-- بخش چت (پس از ورود نمایش داده می‌شود) -->
             <div id="chatSection" class="chat-container">
                 <div class="user-info">
                     <div style="display: flex; align-items: center;">
-                        <div class="avatar" id="userAvatar">U</div>
-                        <div style="margin-right: 15px;">
-                            <div style="font-weight: bold;" id="displayUsername">کاربر</div>
-                            <div style="font-size: 12px; color: #636e72;" id="anonymousId">شناسه ناشناس: ...</div>
+                        <div class="avatar" id="userAvatar">?</div>
+                        <div style="margin-right: 20px;">
+                            <div style="font-weight: bold; font-size: 1.3rem;" id="displayUsername">شناسه ناشناس</div>
+                            <div style="font-size: 13px; color: #a0a0a0;" id="userStatus">آنلاین</div>
                         </div>
                     </div>
-                    <button class="logout-btn" id="logoutBtn">خروج</button>
+                    <button class="logout-btn" id="logoutBtn">خروج از حساب</button>
                 </div>
                 
                 <div class="chat-header">
                     <div>💬 چت عمومی ناشناس</div>
-                    <div style="font-size: 14px;" id="onlineUsers">کاربران آنلاین: 1</div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span>کاربران فعال:</span>
+                        <span id="onlineCount">1</span>
+                    </div>
                 </div>
                 
                 <div class="chat-messages" id="chatMessages">
                     <!-- پیام‌ها در اینجا نمایش داده می‌شوند -->
                     <div class="message received">
-                        <div>به چت ناشناس خوش آمدید! پیام‌های شما ناشناس می‌ماند.</div>
-                        <div class="message-info">سیستم | اکنون</div>
+                        <div class="message-sender">
+                            <span class="badge">سیستم</span>
+                            ربات پیام‌رسان
+                        </div>
+                        <div>به چت ناشناس امن خوش آمدید! همه پیام‌ها در مرورگر شما ذخیره می‌شوند و ناشناس می‌مانند.</div>
+                        <div class="message-info">
+                            <span>سیستم</span>
+                            <span class="message-time">هم اکنون</span>
+                        </div>
                     </div>
+                </div>
+                
+                <div id="typingIndicator" class="typing-indicator" style="display: none;">
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                    <span id="typingUser">کاربر در حال تایپ است...</span>
                 </div>
                 
                 <div class="chat-input">
@@ -481,10 +793,81 @@
                     <button class="send-btn" id="sendMessageBtn">ارسال</button>
                 </div>
             </div>
+            
+            <!-- پنل مدیریت ادمین -->
+            <div class="admin-panel" id="adminPanel">
+                <h2 style="color: #ff416c; text-align: center; margin-bottom: 30px;">🔧 پنل مدیریت سیستم</h2>
+                
+                <div class="admin-section">
+                    <h3>👥 مدیریت کاربران (تعداد: <span id="usersCount">0</span>)</h3>
+                    <div class="admin-actions">
+                        <button class="btn btn-danger" id="clearInactiveUsers">حذف کاربران غیرفعال</button>
+                        <button class="btn btn-danger" id="clearAllUsers">حذف تمام کاربران</button>
+                        <button class="btn btn-secondary" id="exportUsers">خروجی کاربران</button>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>نام کاربری</th>
+                                    <th>شناسه ناشناس</th>
+                                    <th>آخرین فعالیت</th>
+                                    <th>تاریخ عضویت</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminUsersList">
+                                <!-- لیست کاربران -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="admin-section">
+                    <h3>💬 مدیریت پیام‌ها (تعداد: <span id="messagesCount">0</span>)</h3>
+                    <div class="admin-actions">
+                        <button class="btn btn-danger" id="clearOldMessages">حذف پیام‌های قدیمی</button>
+                        <button class="btn btn-danger" id="clearAllMessages">حذف تمام پیام‌ها</button>
+                        <button class="btn btn-secondary" id="exportMessages">خروجی پیام‌ها</button>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>فرستنده</th>
+                                    <th>پیام</th>
+                                    <th>زمان ارسال</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminMessagesList">
+                                <!-- لیست پیام‌ها -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="admin-section">
+                    <h3>⚙️ تنظیمات سیستم</h3>
+                    <div class="admin-actions">
+                        <button class="btn btn-success" id="exportAllData">خروجی کامل داده‌ها</button>
+                        <button class="btn btn-secondary" id="importData">ورود داده‌ها</button>
+                        <button class="btn btn-danger" id="resetSystem">بازنشانی کامل سیستم</button>
+                    </div>
+                    <div style="margin-top: 20px; color: #a0a0a0; font-size: 14px;">
+                        <p>حجم ذخیره‌سازی استفاده شده: <span id="storageUsed">0</span> KB</p>
+                        <p>تعداد کل کاربران ثبت‌نام شده: <span id="totalUsers">0</span></p>
+                        <p>تعداد کل پیام‌های ارسال شده: <span id="totalMessages">0</span></p>
+                    </div>
+                </div>
+                
+                <button class="btn btn-secondary" id="closePanelBtn" style="width: 100%; margin-top: 20px;">بستن پنل مدیریت</button>
+            </div>
         </div>
         
-        <div style="text-align: center; color: white; margin-top: 20px; font-size: 14px;">
-            <p>تمام داده‌ها در مرورگر شما ذخیره می‌شوند و به سرور ارسال نمی‌شوند.</p>
+        <div style="text-align: center; color: #666; margin-top: 30px; font-size: 14px; line-height: 1.6;">
+            <p>🔒 این برنامه کاملاً در مرورگر شما اجرا می‌شود • هیچ داده‌ای به سرور ارسال نمی‌شود • حریم خصوصی شما محفوظ است</p>
+            <p style="margin-top: 10px; color: #888;">برای دسترسی به بخش مدیریت، از دکمه "ورود به بخش مدیریت" استفاده کنید</p>
         </div>
     </div>
     
@@ -492,156 +875,26 @@
     <div id="notification" class="notification"></div>
 
     <script>
-        // کلاس مدیریت ذخیره‌سازی لوکال
-        class LocalStorageManager {
+        // سیستم چت ناشناس پیشرفته
+        class SecureAnonymousChat {
             constructor() {
-                this.USERS_KEY = 'anonymousChatUsers';
-                this.MESSAGES_KEY = 'anonymousChatMessages';
-                this.CURRENT_USER_KEY = 'anonymousChatCurrentUser';
-                this.ADMIN_KEY = 'anonymousChatAdmin';
-                
-                // ایجاد کاربر ادمین پیش‌فرض اگر وجود نداشته باشد
-                this.initializeAdmin();
-            }
-            
-            initializeAdmin() {
-                let admin = this.getAdmin();
-                if (!admin) {
-                    admin = {
-                        id: 'admin',
-                        username: 'admin',
-                        password: 'admin123', // رمز پیش‌فرض
-                        isAdmin: true,
-                        anonymousId: 'مدیر سیستم',
-                        registeredAt: new Date().toISOString()
-                    };
-                    localStorage.setItem(this.ADMIN_KEY, JSON.stringify(admin));
-                }
-            }
-            
-            // مدیریت کاربران
-            getUsers() {
-                const users = localStorage.getItem(this.USERS_KEY);
-                return users ? JSON.parse(users) : [];
-            }
-            
-            saveUser(user) {
-                const users = this.getUsers();
-                users.push(user);
-                localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
-            }
-            
-            deleteUser(username) {
-                let users = this.getUsers();
-                users = users.filter(user => user.username !== username);
-                localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
-            }
-            
-            clearAllUsers() {
-                localStorage.removeItem(this.USERS_KEY);
-            }
-            
-            // مدیریت پیام‌ها
-            getMessages() {
-                const messages = localStorage.getItem(this.MESSAGES_KEY);
-                return messages ? JSON.parse(messages) : [];
-            }
-            
-            saveMessage(message) {
-                const messages = this.getMessages();
-                messages.push(message);
-                localStorage.setItem(this.MESSAGES_KEY, JSON.stringify(messages));
-            }
-            
-            deleteMessage(messageId) {
-                let messages = this.getMessages();
-                messages = messages.filter(msg => msg.id !== messageId);
-                localStorage.setItem(this.MESSAGES_KEY, JSON.stringify(messages));
-            }
-            
-            clearAllMessages() {
-                localStorage.removeItem(this.MESSAGES_KEY);
-            }
-            
-            // مدیریت کاربر جاری
-            getCurrentUser() {
-                const user = localStorage.getItem(this.CURRENT_USER_KEY);
-                return user ? JSON.parse(user) : null;
-            }
-            
-            setCurrentUser(user) {
-                localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(user));
-            }
-            
-            clearCurrentUser() {
-                localStorage.removeItem(this.CURRENT_USER_KEY);
-            }
-            
-            // مدیریت ادمین
-            getAdmin() {
-                const admin = localStorage.getItem(this.ADMIN_KEY);
-                return admin ? JSON.parse(admin) : null;
-            }
-            
-            // صدور مجوز ادمین
-            authenticateAdmin(username, password) {
-                const admin = this.getAdmin();
-                return admin && admin.username === username && admin.password === password;
-            }
-            
-            // صادرات و واردات داده‌ها
-            exportData() {
-                const data = {
-                    users: this.getUsers(),
-                    messages: this.getMessages(),
-                    exportedAt: new Date().toISOString()
-                };
-                return JSON.stringify(data, null, 2);
-            }
-            
-            importData(jsonData) {
-                try {
-                    const data = JSON.parse(jsonData);
-                    if (data.users) {
-                        localStorage.setItem(this.USERS_KEY, JSON.stringify(data.users));
-                    }
-                    if (data.messages) {
-                        localStorage.setItem(this.MESSAGES_KEY, JSON.stringify(data.messages));
-                    }
-                    return true;
-                } catch (error) {
-                    console.error('خطا در واردات داده:', error);
-                    return false;
-                }
-            }
-            
-            // بازنشانی کامل سیستم
-            resetAll() {
-                localStorage.removeItem(this.USERS_KEY);
-                localStorage.removeItem(this.MESSAGES_KEY);
-                localStorage.removeItem(this.CURRENT_USER_KEY);
-                // کاربر ادمین را حذف نکنیم
-                this.initializeAdmin();
-            }
-        }
-
-        // کلاس مدیریت چت
-        class ChatApp {
-            constructor() {
-                this.storage = new LocalStorageManager();
+                this.storage = new EnhancedStorage();
                 this.currentUser = null;
-                this.anonymousIds = {}; // نگاشت نام کاربری به شناسه ناشناس
+                this.typingUsers = new Set();
+                this.onlineUsers = new Map();
+                this.typingTimeout = null;
                 this.init();
             }
             
             init() {
                 this.setupEventListeners();
-                this.checkLoggedInUser();
+                this.checkAutoLogin();
                 this.loadMessages();
-                this.updateAdminPanel();
+                this.startOnlineCheck();
                 
-                // بروزرسانی تعداد کاربران آنلاین هر 10 ثانیه
-                setInterval(() => this.updateOnlineUsers(), 10000);
+                // تنظیم تایمر برای بروزرسانی آنلاین
+                setInterval(() => this.updateOnlineStatus(), 30000);
+                setInterval(() => this.updateOnlineUsersDisplay(), 5000);
             }
             
             setupEventListeners() {
@@ -653,103 +906,119 @@
                     });
                 });
                 
-                // دکمه‌های ورود و ثبت‌نام
+                // ورود و ثبت‌نام
                 document.getElementById('loginBtn').addEventListener('click', () => this.login());
                 document.getElementById('registerBtn').addEventListener('click', () => this.register());
                 
-                // دکمه ارسال پیام
+                // مدیریت پیام‌ها
                 document.getElementById('sendMessageBtn').addEventListener('click', () => this.sendMessage());
-                document.getElementById('messageInput').addEventListener('keydown', (e) => {
+                const messageInput = document.getElementById('messageInput');
+                messageInput.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
                         this.sendMessage();
                     }
                 });
                 
-                // دکمه خروج
-                document.getElementById('logoutBtn').addEventListener('click', () => this.logout());
-                
-                // مدیریت پنل ادمین
-                document.getElementById('adminToggle').addEventListener('click', () => {
-                    const adminPanel = document.getElementById('adminPanel');
-                    adminPanel.classList.toggle('show');
-                });
-                
-                // دکمه‌های مدیریت ادمین
-                document.getElementById('clearAllUsers').addEventListener('click', () => this.adminClearAllUsers());
-                document.getElementById('clearAllMessages').addEventListener('click', () => this.adminClearAllMessages());
-                document.getElementById('exportData').addEventListener('click', () => this.adminExportData());
-                document.getElementById('importData').addEventListener('click', () => this.adminImportData());
-                document.getElementById('resetAll').addEventListener('click', () => this.adminResetAll());
-                
-                // تلاش برای ورود به عنوان ادمین با دوبار کلیک روی عنوان
-                let adminClickCount = 0;
-                document.querySelector('h1').addEventListener('dblclick', () => {
-                    adminClickCount++;
-                    if (adminClickCount === 3) {
-                        this.promptAdminLogin();
-                        adminClickCount = 0;
+                // تایپ کردن
+                messageInput.addEventListener('input', () => {
+                    if (this.currentUser) {
+                        this.setTypingStatus(true);
+                        clearTimeout(this.typingTimeout);
+                        this.typingTimeout = setTimeout(() => {
+                            this.setTypingStatus(false);
+                        }, 2000);
                     }
                 });
+                
+                // خروج
+                document.getElementById('logoutBtn').addEventListener('click', () => this.logout());
+                
+                // دسترسی ادمین
+                document.getElementById('openAdminBtn').addEventListener('click', () => this.openAdminAccess());
+                document.getElementById('closeAdminBtn').addEventListener('click', () => this.closeAdminAccess());
+                document.getElementById('adminLoginBtn').addEventListener('click', () => this.adminLogin());
+                document.getElementById('adminBadge').addEventListener('click', () => this.toggleAdminPanel());
+                document.getElementById('closePanelBtn').addEventListener('click', () => this.toggleAdminPanel());
+                
+                // مدیریت ادمین
+                document.getElementById('clearAllUsers').addEventListener('click', () => this.adminClearAllUsers());
+                document.getElementById('clearAllMessages').addEventListener('click', () => this.adminClearAllMessages());
+                document.getElementById('clearInactiveUsers').addEventListener('click', () => this.adminClearInactiveUsers());
+                document.getElementById('clearOldMessages').addEventListener('click', () => this.adminClearOldMessages());
+                document.getElementById('exportUsers').addEventListener('click', () => this.adminExportUsers());
+                document.getElementById('exportMessages').addEventListener('click', () => this.adminExportMessages());
+                document.getElementById('exportAllData').addEventListener('click', () => this.adminExportAllData());
+                document.getElementById('importData').addEventListener('click', () => this.adminImportData());
+                document.getElementById('resetSystem').addEventListener('click', () => this.adminResetSystem());
+                
+                // رفع مشکل overlay
+                document.getElementById('adminOverlay').addEventListener('click', () => this.closeAdminAccess());
             }
             
             switchTab(tabId) {
-                // به روزرسانی تب‌های فعال
                 document.querySelectorAll('.tab').forEach(tab => {
-                    tab.classList.remove('active');
-                    if (tab.getAttribute('data-tab') === tabId) {
-                        tab.classList.add('active');
-                    }
+                    tab.classList.toggle('active', tab.getAttribute('data-tab') === tabId);
                 });
                 
-                // نمایش فرم مرتبط
                 document.querySelectorAll('.form-container').forEach(form => {
-                    form.classList.remove('active');
+                    form.classList.toggle('active', form.id === `${tabId}Form`);
                 });
-                
-                document.getElementById(tabId + 'Form').classList.add('active');
             }
             
-            showNotification(message, type = 'success') {
+            showNotification(message, type = 'success', duration = 3000) {
                 const notification = document.getElementById('notification');
                 notification.textContent = message;
-                notification.style.background = type === 'success' ? '#00b894' : 
-                                               type === 'error' ? '#ff4757' : '#fdcb6e';
+                
+                const colors = {
+                    success: 'linear-gradient(135deg, #00b09b, #96c93d)',
+                    error: 'linear-gradient(135deg, #ff416c, #ff4b2b)',
+                    warning: 'linear-gradient(135deg, #f7971e, #ffd200)',
+                    info: 'linear-gradient(135deg, #0099ff, #00ccff)'
+                };
+                
+                notification.style.background = colors[type] || colors.info;
                 notification.classList.add('show');
                 
                 setTimeout(() => {
                     notification.classList.remove('show');
-                }, 3000);
+                }, duration);
             }
             
-            generateAnonymousId(username) {
-                // اگر شناسه ناشناس از قبل وجود دارد، برگرداندن آن
-                if (this.anonymousIds[username]) {
-                    return this.anonymousIds[username];
-                }
+            generateAnonymousId(username, gender = '') {
+                const adjectives = ['مبهم', 'ناشناس', 'مرموز', 'ساکت', 'خاموش', 'پنهان', 'مخفی', 'رازآلود'];
+                const nouns = ['سایه', 'شبح', 'راز', 'صدا', 'نفر', 'شخص', 'هم صحبت', 'ناظر'];
+                const genderPrefixes = {
+                    male: ['آقای', 'مرد', 'آقا'],
+                    female: ['خانم', 'زن', 'بانو'],
+                    other: ['فرد', 'شخص', 'همراه']
+                };
                 
-                // ایجاد شناسه ناشناس تصادفی
-                const adjectives = ['مبهم', 'ناشناس', 'مرموز', 'پنهان', 'ساکت', 'خاموش', 'مخفی', 'ناشناخته'];
-                const nouns = ['کاربر', 'شخص', 'فرد', 'همصحبت', 'دوست', 'ناظر', 'شنونده', 'گوینده'];
+                let prefix = '';
+                if (gender && genderPrefixes[gender]) {
+                    prefix = genderPrefixes[gender][Math.floor(Math.random() * genderPrefixes[gender].length)] + ' ';
+                }
                 
                 const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
                 const noun = nouns[Math.floor(Math.random() * nouns.length)];
                 const num = Math.floor(Math.random() * 999) + 1;
                 
-                const anonymousId = `${adj} ${noun} ${num}`;
-                this.anonymousIds[username] = anonymousId;
-                
-                return anonymousId;
+                return `${prefix}${adj} ${noun} ${num}`;
             }
             
             register() {
                 const username = document.getElementById('registerUsername').value.trim();
                 const password = document.getElementById('registerPassword').value;
                 const confirmPassword = document.getElementById('confirmPassword').value;
+                const gender = document.getElementById('userGender').value;
                 
-                // اعتبارسنجی
                 if (!username || !password) {
-                    this.showNotification('لطفاً تمام فیلدها را پر کنید', 'error');
+                    this.showNotification('لطفاً نام کاربری و رمز عبور را وارد کنید', 'error');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    this.showNotification('رمز عبور باید حداقل ۶ کاراکتر باشد', 'error');
                     return;
                 }
                 
@@ -758,8 +1027,8 @@
                     return;
                 }
                 
-                if (password.length < 4) {
-                    this.showNotification('رمز عبور باید حداقل ۴ کاراکتر باشد', 'error');
+                if (username.length < 3) {
+                    this.showNotification('نام کاربری باید حداقل ۳ کاراکتر باشد', 'error');
                     return;
                 }
                 
@@ -773,41 +1042,53 @@
                 }
                 
                 // ایجاد کاربر جدید
-                const anonymousId = this.generateAnonymousId(username);
+                const anonymousId = this.generateAnonymousId(username, gender);
                 const newUser = {
-                    id: Date.now().toString(),
+                    id: 'user_' + Date.now(),
                     username,
-                    password, // در پروژه واقعی رمز باید هش شود
+                    password: this.hashPassword(password),
                     anonymousId,
+                    gender,
                     registeredAt: new Date().toISOString(),
-                    lastSeen: new Date().toISOString()
+                    lastSeen: new Date().toISOString(),
+                    lastActive: new Date().toISOString(),
+                    isOnline: true,
+                    messageCount: 0
                 };
                 
                 // ذخیره کاربر
                 this.storage.saveUser(newUser);
-                this.showNotification('ثبت‌نام موفق! در حال ورود...');
+                this.showNotification(`حساب شما با شناسه "${anonymousId}" ایجاد شد`);
                 
-                // ورود خودکار پس از ثبت‌نام
+                // ورود خودکار
                 setTimeout(() => {
                     this.loginUser(newUser);
-                }, 1000);
+                }, 1500);
+            }
+            
+            hashPassword(password) {
+                // در یک برنامه واقعی باید از الگوریتم مناسب استفاده شود
+                // این فقط برای نمونه است
+                let hash = 0;
+                for (let i = 0; i < password.length; i++) {
+                    const char = password.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                return hash.toString();
             }
             
             login() {
                 const username = document.getElementById('loginUsername').value.trim();
                 const password = document.getElementById('loginPassword').value;
                 
-                // ابتدا بررسی می‌کنیم آیا کاربر ادمین است؟
-                if (this.storage.authenticateAdmin(username, password)) {
-                    this.showNotification('ورود به عنوان ادمین موفق بود!');
-                    // برای ادمین، پنل مدیریت را نشان می‌دهیم
-                    document.getElementById('adminPanel').classList.add('show');
+                if (!username || !password) {
+                    this.showNotification('لطفاً نام کاربری و رمز عبور را وارد کنید', 'error');
                     return;
                 }
                 
-                // سپس کاربران معمولی را بررسی می‌کنیم
                 const users = this.storage.getUsers();
-                const user = users.find(u => u.username === username && u.password === password);
+                const user = users.find(u => u.username === username && u.password === this.hashPassword(password));
                 
                 if (user) {
                     this.loginUser(user);
@@ -818,37 +1099,69 @@
             
             loginUser(user) {
                 this.currentUser = user;
+                this.currentUser.lastSeen = new Date().toISOString();
+                this.currentUser.lastActive = new Date().toISOString();
+                this.currentUser.isOnline = true;
                 
-                // به روزرسانی زمان آخرین فعالیت
-                user.lastSeen = new Date().toISOString();
+                this.storage.updateUser(user);
                 this.storage.setCurrentUser(user);
                 
                 // نمایش بخش چت
                 document.getElementById('loginForm').classList.remove('active');
                 document.getElementById('registerForm').classList.remove('active');
                 document.getElementById('chatSection').style.display = 'flex';
+                document.getElementById('onlineUsersPanel').style.display = 'block';
                 
                 // به روزرسانی اطلاعات کاربر
-                document.getElementById('displayUsername').textContent = `شناسه شما: ${user.anonymousId}`;
-                document.getElementById('anonymousId').textContent = `نام کاربری: ${user.username}`;
-                document.getElementById('userAvatar').textContent = user.username.charAt(0).toUpperCase();
+                document.getElementById('displayUsername').textContent = user.anonymousId;
+                document.getElementById('userAvatar').textContent = user.anonymousId.charAt(0);
+                document.getElementById('userAvatar').style.background = this.getAvatarColor(user.username);
                 
-                // پاک کردن فیلدهای فرم
-                document.getElementById('loginUsername').value = '';
-                document.getElementById('loginPassword').value = '';
-                document.getElementById('registerUsername').value = '';
-                document.getElementById('registerPassword').value = '';
-                document.getElementById('confirmPassword').value = '';
+                // پاک کردن فیلدها
+                ['loginUsername', 'loginPassword', 'registerUsername', 'registerPassword', 'confirmPassword'].forEach(id => {
+                    document.getElementById(id).value = '';
+                });
+                
+                // به روزرسانی وضعیت آنلاین
+                this.updateOnlineStatus();
+                this.updateOnlineUsersDisplay();
                 
                 this.showNotification(`خوش آمدید ${user.anonymousId}!`);
-                this.updateOnlineUsers();
-                this.updateAdminPanel();
+                
+                // بررسی اگر کاربر ادمین است
+                if (user.username === 'admin') {
+                    document.getElementById('adminBadge').style.display = 'block';
+                }
             }
             
-            checkLoggedInUser() {
+            getAvatarColor(username) {
+                const colors = [
+                    'linear-gradient(135deg, #ff416c, #ff4b2b)',
+                    'linear-gradient(135deg, #0099ff, #00ccff)',
+                    'linear-gradient(135deg, #00b09b, #96c93d)',
+                    'linear-gradient(135deg, #f7971e, #ffd200)',
+                    'linear-gradient(135deg, #834d9b, #d04ed6)',
+                    'linear-gradient(135deg, #1d976c, #93f9b9)'
+                ];
+                
+                let hash = 0;
+                for (let i = 0; i < username.length; i++) {
+                    hash = username.charCodeAt(i) + ((hash << 5) - hash);
+                }
+                
+                return colors[Math.abs(hash) % colors.length];
+            }
+            
+            checkAutoLogin() {
                 const user = this.storage.getCurrentUser();
                 if (user) {
-                    this.loginUser(user);
+                    const users = this.storage.getUsers();
+                    const foundUser = users.find(u => u.id === user.id && u.password === user.password);
+                    if (foundUser) {
+                        this.loginUser(foundUser);
+                    } else {
+                        this.storage.clearCurrentUser();
+                    }
                 }
             }
             
@@ -868,31 +1181,43 @@
                 
                 // ایجاد پیام جدید
                 const message = {
-                    id: Date.now().toString(),
+                    id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
                     senderId: this.currentUser.anonymousId,
                     senderUsername: this.currentUser.username,
                     text: messageText,
                     timestamp: new Date().toISOString(),
                     timeDisplay: new Date().toLocaleTimeString('fa-IR', { 
                         hour: '2-digit', 
-                        minute: '2-digit' 
-                    })
+                        minute: '2-digit'
+                    }),
+                    dateDisplay: new Date().toLocaleDateString('fa-IR')
                 };
                 
                 // ذخیره پیام
                 this.storage.saveMessage(message);
                 
-                // نمایش پیام در چت
+                // به روزرسانی تعداد پیام‌های کاربر
+                this.currentUser.messageCount = (this.currentUser.messageCount || 0) + 1;
+                this.currentUser.lastActive = new Date().toISOString();
+                this.storage.updateUser(this.currentUser);
+                
+                // نمایش پیام
                 this.displayMessage(message, true);
                 
                 // پاک کردن فیلد ورودی
                 messageInput.value = '';
+                messageInput.focus();
                 
                 // اسکرول به پایین
-                const chatMessages = document.getElementById('chatMessages');
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+                setTimeout(() => {
+                    const chatMessages = document.getElementById('chatMessages');
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 100);
                 
-                // به روزرسانی پنل ادمین
+                // پنهان کردن وضعیت تایپ
+                this.setTypingStatus(false);
+                
+                // به روزرسانی پنل ادمین اگر باز است
                 this.updateAdminPanel();
             }
             
@@ -902,12 +1227,27 @@
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `message ${isSentByMe ? 'sent' : 'received'}`;
                 
+                const senderDisplay = isSentByMe ? 'شما' : message.senderId;
+                
                 messageDiv.innerHTML = `
-                    <div>${message.text}</div>
-                    <div class="message-info">${message.senderId} | ${message.timeDisplay}</div>
+                    <div class="message-sender">
+                        ${!isSentByMe ? `<span class="badge">${message.senderId.split(' ')[0]}</span>` : ''}
+                        ${senderDisplay}
+                    </div>
+                    <div>${this.escapeHtml(message.text)}</div>
+                    <div class="message-info">
+                        <span>${isSentByMe ? 'شما' : message.senderId}</span>
+                        <span class="message-time">${message.timeDisplay}</span>
+                    </div>
                 `;
                 
                 chatMessages.appendChild(messageDiv);
+            }
+            
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
             }
             
             loadMessages() {
@@ -921,78 +1261,241 @@
                     chatMessages.appendChild(welcomeMessage);
                 }
                 
-                // نمایش تمام پیام‌ها
+                // نمایش پیام‌ها
+                let lastDate = null;
                 messages.forEach(message => {
+                    const messageDate = new Date(message.timestamp).toLocaleDateString('fa-IR');
+                    
+                    // افزودن تاریخ اگر تغییر کرده باشد
+                    if (messageDate !== lastDate) {
+                        const dateDiv = document.createElement('div');
+                        dateDiv.style.textAlign = 'center';
+                        dateDiv.style.margin = '20px 0';
+                        dateDiv.style.color = '#888';
+                        dateDiv.style.fontSize = '14px';
+                        dateDiv.innerHTML = `<hr style="border-color: #333; margin: 10px;">${messageDate}<hr style="border-color: #333; margin: 10px;">`;
+                        chatMessages.appendChild(dateDiv);
+                        lastDate = messageDate;
+                    }
+                    
                     const isSentByMe = this.currentUser && 
                                       (message.senderUsername === this.currentUser.username);
                     this.displayMessage(message, isSentByMe);
                 });
                 
                 // اسکرول به پایین
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+                setTimeout(() => {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 100);
             }
             
-            updateOnlineUsers() {
+            setTypingStatus(isTyping) {
                 if (!this.currentUser) return;
                 
+                if (isTyping) {
+                    this.typingUsers.add(this.currentUser.anonymousId);
+                    this.currentUser.lastActive = new Date().toISOString();
+                    this.storage.updateUser(this.currentUser);
+                } else {
+                    this.typingUsers.delete(this.currentUser.anonymousId);
+                }
+                
+                this.updateTypingIndicator();
+            }
+            
+            updateTypingIndicator() {
+                const typingIndicator = document.getElementById('typingIndicator');
+                const typingUser = document.getElementById('typingUser');
+                
+                if (this.typingUsers.size > 0) {
+                    const typers = Array.from(this.typingUsers);
+                    if (typers.length === 1) {
+                        typingUser.textContent = `${typers[0]} در حال تایپ است...`;
+                    } else if (typers.length === 2) {
+                        typingUser.textContent = `${typers[0]} و ${typers[1]} در حال تایپ هستند...`;
+                    } else {
+                        typingUser.textContent = `${typers.length} کاربر در حال تایپ هستند...`;
+                    }
+                    typingIndicator.style.display = 'flex';
+                } else {
+                    typingIndicator.style.display = 'none';
+                }
+            }
+            
+            updateOnlineStatus() {
+                if (!this.currentUser) return;
+                
+                this.currentUser.lastSeen = new Date().toISOString();
+                this.storage.updateUser(this.currentUser);
+                this.updateOnlineUsersDisplay();
+            }
+            
+            startOnlineCheck() {
+                setInterval(() => {
+                    const users = this.storage.getUsers();
+                    const now = new Date();
+                    
+                    users.forEach(user => {
+                        const lastSeen = new Date(user.lastSeen);
+                        const diffMinutes = (now - lastSeen) / (1000 * 60);
+                        user.isOnline = diffMinutes < 5; // 5 دقیقه آنلاین در نظر گرفته می‌شود
+                        this.storage.updateUser(user);
+                    });
+                    
+                    this.updateOnlineUsersDisplay();
+                }, 60000); // هر دقیقه بررسی کن
+            }
+            
+            updateOnlineUsersDisplay() {
                 const users = this.storage.getUsers();
                 const now = new Date();
                 
-                // کاربرانی که در ۵ دقیقه گذشته فعال بوده‌اند
+                // فیلتر کاربران آنلاین (فعال در 5 دقیقه گذشته)
                 const onlineUsers = users.filter(user => {
+                    if (user.username === 'admin') return false; // ادمین را نمایش نده
                     const lastSeen = new Date(user.lastSeen);
                     const diffMinutes = (now - lastSeen) / (1000 * 60);
                     return diffMinutes < 5;
                 });
                 
-                document.getElementById('onlineUsers').textContent = 
-                    `کاربران آنلاین: ${onlineUsers.length}`;
+                // به روزرسانی تعداد
+                document.getElementById('onlineCount').textContent = onlineUsers.length;
+                
+                // به روزرسانی لیست
+                const onlineUsersList = document.getElementById('onlineUsersList');
+                onlineUsersList.innerHTML = '';
+                
+                onlineUsers.forEach(user => {
+                    const userDiv = document.createElement('div');
+                    userDiv.className = 'online-user';
+                    
+                    userDiv.innerHTML = `
+                        <div class="online-user-avatar" style="background: ${this.getAvatarColor(user.username)}">
+                            ${user.anonymousId.charAt(0)}
+                        </div>
+                        <div>
+                            <div style="font-weight: bold;">${user.anonymousId}</div>
+                            <div style="font-size: 11px; color: #aaa;">
+                                ${new Date(user.lastSeen).toLocaleTimeString('fa-IR', {hour: '2-digit', minute: '2-digit'})}
+                            </div>
+                        </div>
+                        <div class="status-indicator"></div>
+                    `;
+                    
+                    onlineUsersList.appendChild(userDiv);
+                });
             }
             
             logout() {
+                if (this.currentUser) {
+                    this.currentUser.isOnline = false;
+                    this.storage.updateUser(this.currentUser);
+                }
+                
                 this.currentUser = null;
                 this.storage.clearCurrentUser();
                 
-                // نمایش فرم ورود
+                // بازگشت به صفحه ورود
                 document.getElementById('chatSection').style.display = 'none';
+                document.getElementById('onlineUsersPanel').style.display = 'none';
+                document.getElementById('adminPanel').classList.remove('show');
+                document.getElementById('adminBadge').style.display = 'none';
                 document.getElementById('loginForm').classList.add('active');
                 this.switchTab('login');
                 
                 this.showNotification('با موفقیت خارج شدید');
             }
             
-            promptAdminLogin() {
-                const username = prompt('نام کاربری ادمین:');
-                if (!username) return;
+            // بخش مدیریت ادمین
+            openAdminAccess() {
+                document.getElementById('adminOverlay').classList.add('show');
+                document.getElementById('adminAccess').classList.add('show');
+            }
+            
+            closeAdminAccess() {
+                document.getElementById('adminOverlay').classList.remove('show');
+                document.getElementById('adminAccess').classList.remove('show');
+            }
+            
+            adminLogin() {
+                const username = document.getElementById('adminUsername').value.trim();
+                const password = document.getElementById('adminPassword').value;
+                const secret = document.getElementById('adminSecret').value;
                 
-                const password = prompt('رمز عبور ادمین:');
-                if (!password) return;
+                // اعتبارسنجی ادمین
+                const adminData = this.storage.getAdminData();
                 
-                if (this.storage.authenticateAdmin(username, password)) {
-                    document.getElementById('adminPanel').classList.add('show');
-                    this.showNotification('دسترسی ادمین فعال شد!');
+                if (username === adminData.username && 
+                    password === adminData.password && 
+                    secret === adminData.secret) {
+                    
+                    this.closeAdminAccess();
+                    this.showNotification('ورود به پنل مدیریت موفق بود', 'success');
+                    
+                    // نمایش نشانگر ادمین
+                    document.getElementById('adminBadge').style.display = 'block';
+                    
+                    // اگر کاربر وارد شده، پنل را نمایش بده
+                    if (this.currentUser) {
+                        this.toggleAdminPanel();
+                    }
+                    
+                    // پاک کردن فیلدها
+                    document.getElementById('adminUsername').value = '';
+                    document.getElementById('adminPassword').value = '';
+                    document.getElementById('adminSecret').value = '';
+                    
                 } else {
-                    this.showNotification('اعتبارسنجی ادمین ناموفق بود', 'error');
+                    this.showNotification('اعتبارسنجی ناموفق بود', 'error');
+                }
+            }
+            
+            toggleAdminPanel() {
+                const panel = document.getElementById('adminPanel');
+                panel.classList.toggle('show');
+                
+                if (panel.classList.contains('show')) {
+                    this.updateAdminPanel();
                 }
             }
             
             updateAdminPanel() {
-                // به روزرسانی لیست کاربران
                 const users = this.storage.getUsers();
+                const messages = this.storage.getMessages();
+                
+                // به روزرسانی آمار
+                document.getElementById('usersCount').textContent = users.length;
+                document.getElementById('messagesCount').textContent = messages.length;
+                document.getElementById('totalUsers').textContent = users.length;
+                document.getElementById('totalMessages').textContent = messages.length;
+                
+                // محاسبه حجم ذخیره‌سازی
+                const storageUsed = Math.round((JSON.stringify(localStorage).length / 1024) * 100) / 100;
+                document.getElementById('storageUsed').textContent = storageUsed;
+                
+                // به روزرسانی لیست کاربران
                 const usersList = document.getElementById('adminUsersList');
                 usersList.innerHTML = '';
                 
                 users.forEach(user => {
+                    if (user.username === 'admin') return; // ادمین اصلی را نمایش نده
+                    
                     const row = document.createElement('tr');
-                    const registeredDate = new Date(user.registeredAt).toLocaleDateString('fa-IR');
+                    const lastSeen = new Date(user.lastSeen);
+                    const now = new Date();
+                    const diffMinutes = Math.round((now - lastSeen) / (1000 * 60));
+                    const isOnline = diffMinutes < 5;
                     
                     row.innerHTML = `
                         <td>${user.username}</td>
                         <td>${user.anonymousId}</td>
-                        <td>${registeredDate}</td>
+                        <td>
+                            ${isOnline ? '<span style="color: #00ff00;">● آنلاین</span>' : `${diffMinutes} دقیقه پیش`}
+                        </td>
+                        <td>${new Date(user.registeredAt).toLocaleDateString('fa-IR')}</td>
                         <td>
                             <button class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" 
-                                    onclick="chatApp.adminDeleteUser('${user.username}')">
+                                    onclick="chat.adminDeleteUser('${user.id}')">
                                 حذف
                             </button>
                         </td>
@@ -1002,21 +1505,25 @@
                 });
                 
                 // به روزرسانی لیست پیام‌ها
-                const messages = this.storage.getMessages();
                 const messagesList = document.getElementById('adminMessagesList');
                 messagesList.innerHTML = '';
                 
-                messages.forEach(message => {
+                // فقط 50 پیام آخر را نمایش بده
+                const recentMessages = messages.slice(-50);
+                
+                recentMessages.forEach(message => {
                     const row = document.createElement('tr');
-                    const time = new Date(message.timestamp).toLocaleTimeString('fa-IR');
                     
                     row.innerHTML = `
-                        <td>${message.senderId}<br><small>(${message.senderUsername})</small></td>
-                        <td>${message.text}</td>
-                        <td>${time}</td>
+                        <td>
+                            <div>${message.senderId}</div>
+                            <small>${message.senderUsername}</small>
+                        </td>
+                        <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">${message.text}</td>
+                        <td>${new Date(message.timestamp).toLocaleString('fa-IR')}</td>
                         <td>
                             <button class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;"
-                                    onclick="chatApp.adminDeleteMessage('${message.id}')">
+                                    onclick="chat.adminDeleteMessage('${message.id}')">
                                 حذف
                             </button>
                         </td>
@@ -1027,11 +1534,12 @@
             }
             
             // توابع مدیریت ادمین
-            adminDeleteUser(username) {
-                if (confirm(`آیا از حذف کاربر "${username}" مطمئن هستید؟`)) {
-                    this.storage.deleteUser(username);
+            adminDeleteUser(userId) {
+                if (confirm('آیا از حذف این کاربر مطمئن هستید؟ تمام پیام‌های او نیز حذف خواهند شد.')) {
+                    this.storage.deleteUser(userId);
                     this.updateAdminPanel();
-                    this.showNotification(`کاربر "${username}" حذف شد`);
+                    this.updateOnlineUsersDisplay();
+                    this.showNotification('کاربر حذف شد', 'success');
                 }
             }
             
@@ -1040,15 +1548,16 @@
                     this.storage.deleteMessage(messageId);
                     this.loadMessages();
                     this.updateAdminPanel();
-                    this.showNotification('پیام حذف شد');
+                    this.showNotification('پیام حذف شد', 'success');
                 }
             }
             
             adminClearAllUsers() {
-                if (confirm('آیا از حذف تمام کاربران مطمئن هستید؟ این عمل غیرقابل بازگشت است.')) {
+                if (confirm('آیا از حذف تمام کاربران (به جز ادمین) مطمئن هستید؟ این عمل غیرقابل بازگشت است.')) {
                     this.storage.clearAllUsers();
                     this.updateAdminPanel();
-                    this.showNotification('تمامی کاربران حذف شدند');
+                    this.updateOnlineUsersDisplay();
+                    this.showNotification('تمام کاربران حذف شدند', 'success');
                 }
             }
             
@@ -1057,72 +1566,249 @@
                     this.storage.clearAllMessages();
                     this.loadMessages();
                     this.updateAdminPanel();
-                    this.showNotification('تمامی پیام‌ها حذف شدند');
+                    this.showNotification('تمام پیام‌ها حذف شدند', 'success');
                 }
             }
             
-            adminExportData() {
-                const data = this.storage.exportData();
-                const blob = new Blob([data], { type: 'application/json' });
+            adminClearInactiveUsers() {
+                const users = this.storage.getUsers();
+                const now = new Date();
+                let deletedCount = 0;
+                
+                users.forEach(user => {
+                    if (user.username === 'admin') return;
+                    
+                    const lastSeen = new Date(user.lastSeen);
+                    const diffDays = (now - lastSeen) / (1000 * 60 * 60 * 24);
+                    
+                    if (diffDays > 30) { // کاربران غیرفعال بیش از 30 روز
+                        this.storage.deleteUser(user.id);
+                        deletedCount++;
+                    }
+                });
+                
+                this.updateAdminPanel();
+                this.updateOnlineUsersDisplay();
+                this.showNotification(`${deletedCount} کاربر غیرفعال حذف شدند`, 'success');
+            }
+            
+            adminClearOldMessages() {
+                const messages = this.storage.getMessages();
+                const now = new Date();
+                let deletedCount = 0;
+                
+                messages.forEach(message => {
+                    const messageDate = new Date(message.timestamp);
+                    const diffDays = (now - messageDate) / (1000 * 60 * 60 * 24);
+                    
+                    if (diffDays > 7) { // پیام‌های قدیمی‌تر از 7 روز
+                        this.storage.deleteMessage(message.id);
+                        deletedCount++;
+                    }
+                });
+                
+                this.loadMessages();
+                this.updateAdminPanel();
+                this.showNotification(`${deletedCount} پیام قدیمی حذف شدند`, 'success');
+            }
+            
+            adminExportUsers() {
+                const users = this.storage.getUsers();
+                const data = users.map(user => ({
+                    username: user.username,
+                    anonymousId: user.anonymousId,
+                    registeredAt: user.registeredAt,
+                    lastSeen: user.lastSeen,
+                    messageCount: user.messageCount || 0
+                }));
+                
+                this.exportToFile(data, 'users.json');
+                this.showNotification('لیست کاربران صادر شد', 'success');
+            }
+            
+            adminExportMessages() {
+                const messages = this.storage.getMessages();
+                const data = messages.map(message => ({
+                    sender: message.senderId,
+                    text: message.text,
+                    timestamp: message.timestamp,
+                    originalSender: message.senderUsername
+                }));
+                
+                this.exportToFile(data, 'messages.json');
+                this.showNotification('لیست پیام‌ها صادر شد', 'success');
+            }
+            
+            adminExportAllData() {
+                const data = {
+                    users: this.storage.getUsers().map(user => ({
+                        username: user.username,
+                        anonymousId: user.anonymousId,
+                        registeredAt: user.registeredAt,
+                        lastSeen: user.lastSeen
+                    })),
+                    messages: this.storage.getMessages().map(message => ({
+                        sender: message.senderId,
+                        text: message.text.substring(0, 100) + (message.text.length > 100 ? '...' : ''),
+                        timestamp: message.timestamp
+                    })),
+                    exportDate: new Date().toISOString(),
+                    totalUsers: this.storage.getUsers().length,
+                    totalMessages: this.storage.getMessages().length
+                };
+                
+                this.exportToFile(data, 'chat-backup.json');
+                this.showNotification('پشتیبان کامل داده‌ها صادر شد', 'success');
+            }
+            
+            exportToFile(data, filename) {
+                const jsonData = JSON.stringify(data, null, 2);
+                const blob = new Blob([jsonData], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `chat-backup-${new Date().toISOString().split('T')[0]}.json`;
+                a.download = filename;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
-                
-                this.showNotification('داده‌ها با موفقیت صادر شدند');
             }
             
             adminImportData() {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = '.json';
-                
-                input.onchange = (e) => {
-                    const file = e.target.files[0];
-                    const reader = new FileReader();
-                    
-                    reader.onload = (event) => {
-                        const success = this.storage.importData(event.target.result);
-                        if (success) {
-                            this.loadMessages();
-                            this.updateAdminPanel();
-                            this.showNotification('داده‌ها با موفقیت وارد شدند');
-                        } else {
-                            this.showNotification('خطا در واردات داده‌ها', 'error');
-                        }
-                    };
-                    
-                    reader.readAsText(file);
-                };
-                
-                input.click();
+                this.showNotification('این قابلیت در نسخه بعدی اضافه خواهد شد', 'info');
             }
             
-            adminResetAll() {
-                if (confirm('آیا از بازنشانی کامل سیستم مطمئن هستید؟ تمامی کاربران و پیام‌ها حذف خواهند شد. این عمل غیرقابل بازگشت است.')) {
-                    this.storage.resetAll();
-                    this.currentUser = null;
-                    this.storage.clearCurrentUser();
+            adminResetSystem() {
+                if (confirm('⚠️ هشدار: آیا از بازنشانی کامل سیستم مطمئن هستید؟\n\nتمام کاربران (به جز ادمین) و تمام پیام‌ها حذف خواهند شد.\nاین عمل غیرقابل بازگشت است!')) {
+                    this.storage.resetSystem();
                     
                     // بازنشانی رابط کاربری
-                    document.getElementById('chatSection').style.display = 'none';
-                    document.getElementById('loginForm').classList.add('active');
-                    this.switchTab('login');
-                    
+                    this.logout();
                     this.loadMessages();
                     this.updateAdminPanel();
-                    this.showNotification('سیستم کاملاً بازنشانی شد');
+                    this.updateOnlineUsersDisplay();
+                    
+                    this.showNotification('سیستم با موفقیت بازنشانی شد', 'success');
                 }
             }
         }
 
+        // سیستم ذخیره‌سازی پیشرفته
+        class EnhancedStorage {
+            constructor() {
+                this.USERS_KEY = 'secure_chat_users_v2';
+                this.MESSAGES_KEY = 'secure_chat_messages_v2';
+                this.CURRENT_USER_KEY = 'secure_chat_current_user_v2';
+                this.ADMIN_KEY = 'secure_chat_admin_config';
+                
+                this.initAdmin();
+            }
+            
+            initAdmin() {
+                let admin = localStorage.getItem(this.ADMIN_KEY);
+                if (!admin) {
+                    const defaultAdmin = {
+                        username: 'admin',
+                        password: 'Admin@1234',
+                        secret: 'CHAT-SECURE-2024',
+                        created: new Date().toISOString()
+                    };
+                    localStorage.setItem(this.ADMIN_KEY, JSON.stringify(defaultAdmin));
+                }
+            }
+            
+            getAdminData() {
+                const admin = localStorage.getItem(this.ADMIN_KEY);
+                return admin ? JSON.parse(admin) : null;
+            }
+            
+            getUsers() {
+                const users = localStorage.getItem(this.USERS_KEY);
+                return users ? JSON.parse(users) : [];
+            }
+            
+            saveUser(user) {
+                const users = this.getUsers();
+                const existingIndex = users.findIndex(u => u.id === user.id);
+                
+                if (existingIndex >= 0) {
+                    users[existingIndex] = user;
+                } else {
+                    users.push(user);
+                }
+                
+                localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+            }
+            
+            updateUser(user) {
+                this.saveUser(user);
+            }
+            
+            deleteUser(userId) {
+                let users = this.getUsers();
+                users = users.filter(user => user.id !== userId);
+                localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+            }
+            
+            clearAllUsers() {
+                const adminUser = this.getUsers().find(user => user.username === 'admin');
+                const usersToKeep = adminUser ? [adminUser] : [];
+                localStorage.setItem(this.USERS_KEY, JSON.stringify(usersToKeep));
+            }
+            
+            getMessages() {
+                const messages = localStorage.getItem(this.MESSAGES_KEY);
+                return messages ? JSON.parse(messages) : [];
+            }
+            
+            saveMessage(message) {
+                const messages = this.getMessages();
+                messages.push(message);
+                localStorage.setItem(this.MESSAGES_KEY, JSON.stringify(messages));
+            }
+            
+            deleteMessage(messageId) {
+                let messages = this.getMessages();
+                messages = messages.filter(msg => msg.id !== messageId);
+                localStorage.setItem(this.MESSAGES_KEY, JSON.stringify(messages));
+            }
+            
+            clearAllMessages() {
+                localStorage.setItem(this.MESSAGES_KEY, JSON.stringify([]));
+            }
+            
+            getCurrentUser() {
+                const user = localStorage.getItem(this.CURRENT_USER_KEY);
+                return user ? JSON.parse(user) : null;
+            }
+            
+            setCurrentUser(user) {
+                localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(user));
+            }
+            
+            clearCurrentUser() {
+                localStorage.removeItem(this.CURRENT_USER_KEY);
+            }
+            
+            resetSystem() {
+                this.clearAllUsers();
+                this.clearAllMessages();
+                this.clearCurrentUser();
+                this.initAdmin(); // ادمین را نگه دار
+            }
+            
+            // ابزار کمکی
+            generateId() {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2);
+            }
+        }
+
         // راه‌اندازی برنامه
-        const chatApp = new ChatApp();
+        const chat = new SecureAnonymousChat();
+        
+        // توابع عمومی برای دسترسی از HTML
+        window.chat = chat;
     </script>
 </body>
-  </html>
+    </html>
